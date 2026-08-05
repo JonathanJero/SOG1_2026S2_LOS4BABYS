@@ -13,6 +13,9 @@ GO
 
 USE MayaCodeDB;
 GO
+SET QUOTED_IDENTIFIER ON;
+SET ANSI_NULLS ON;
+GO
 
 -- =============================================================================
 -- 2. TABLA STAGING (PREPARACIÓN PARA ROL B - CARGA MASIVA)
