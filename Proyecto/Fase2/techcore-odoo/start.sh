@@ -10,7 +10,7 @@ echo "=========================================================="
 
 # 1. Asegurar permisos en filestore y db-init
 echo "[INFO] Configurando permisos locales..."
-chmod -R a+rwX filestore db-init 2>/dev/null || true
+chmod -R a+rwX filestore db-init scripts 2>/dev/null || true
 chmod +x db-init/01-restore-techcore.sh 2>/dev/null || true
 
 # 2. Levantar contenedores
@@ -33,8 +33,31 @@ done
 echo ""
 if [ $COUNT -ge $MAX_WAIT ]; then
     echo "[WARN] Tiempo de espera excedido. Revisa los logs con: docker compose logs -f"
+    SKIP_MENU_FIX=1
 else
     echo "[OK] Base de datos TechCore_DB lista y conectada."
+fi
+
+# 4. Reparar el menu de Ventas
+# El snapshot original se creo sin el modulo 'sale' instalado, por lo que el
+# menu raiz de Ventas quedo archivado en el dump. Este paso lo desarchiva de
+# forma idempotente en cada arranque, para que la app quede disponible sin
+# importar con que respaldo se restauro la base.
+if [ -z "$SKIP_MENU_FIX" ]; then
+    echo ""
+    echo "[INFO] Verificando disponibilidad del menu de Ventas..."
+    if docker compose run --rm -T web odoo shell \
+        -c /etc/odoo/odoo.conf \
+        -d TechCore_DB \
+        --db_host=db \
+        --stop-after-init \
+        --log-level=warn \
+        < scripts/activar_menu_ventas.py 2>&1 | grep -E "\[(OK|FIX|WARN)\]"; then
+        echo "[OK] Menu de Ventas verificado."
+    else
+        echo "[WARN] No se pudo verificar el menu de Ventas. Si no aparece la app"
+        echo "       Ventas, revisa: docker compose logs web"
+    fi
 fi
 
 echo ""
