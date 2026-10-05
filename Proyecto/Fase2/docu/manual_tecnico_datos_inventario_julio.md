@@ -28,27 +28,31 @@ Acceso al sistema: `http://localhost:8069`, base de datos `TechCore_DB`. La mone
 
 ## 2. Archivos de Importación
 
-Se prepararon cuatro archivos `.xlsx` a partir de los datos maestros del grupo (`Datos_Maestros_TechCore_Fase2.xlsx`), con los encabezados adaptados a los **nombres técnicos de los campos de Odoo** para que el asistente de importación los reconozca automáticamente. Se encuentran en la carpeta `Proyecto/Fase2/techcore-odoo/`.
+Se prepararon seis archivos `.xlsx` a partir de los datos maestros del grupo (`Datos_Maestros_TechCore_Fase2.xlsx`), con los encabezados adaptados a los **campos de Odoo** (nombres técnicos, y en el inventario físico las etiquetas de la interfaz) para que el asistente de importación los reconozca automáticamente. Se encuentran en la carpeta `Proyecto/Fase2/techcore-odoo/`.
 
 | Archivo | Modelo de Odoo | Registros | Columnas |
 |---|---|---|---|
-| `1_Productos_Odoo.xlsx` | Producto (`product.template`) | 20 | `default_code`, `name`, `categ_id`, `list_price`, `standard_price`, `detailed_type`, `sale_ok`, `purchase_ok` |
-| `2_Clientes_Odoo.xlsx` | Contacto (`res.partner`) | 5 | `name`, `company_type`, `email`, `phone`, `street`, `country_id`, `category_id` |
-| `3_Proveedores_Odoo.xlsx` | Contacto (`res.partner`) | 3 | `name`, `company_type`, `email`, `supplier_rank`, `comment` |
-| `4_Inventario_Fisico_Odoo.xlsx` | Ajuste de inventario (`stock.quant`) | 20 | `product_id/default_code`, `location_id`, `inventory_quantity` |
+| `0_Categorias_Odoo.xlsx` | Categoría de producto (`product.category`) | 7 | `name`, `parent_id` |
+| `1_Productos_Odoo.xlsx` | Producto (`product.template`) | 20 | `id`, `default_code`, `name`, `categ_id`, `list_price`, `standard_price`, `detailed_type`, `sale_ok`, `purchase_ok` |
+| `2_Clientes_Odoo.xlsx` | Contacto (`res.partner`) | 5 | `id`, `name`, `company_type`, `email`, `phone`, `street`, `country_id`, `category_id` |
+| `3_Proveedores_Odoo.xlsx` | Contacto (`res.partner`) | 3 | `id`, `name`, `company_type`, `email`, `supplier_rank`, `comment` |
+| `4_Inventario_Fisico_Odoo.xlsx` | Ajuste de inventario (`stock.quant`) | 20 | `Product/Internal Reference`, `Location`, `Counted Quantity` |
 | `5_Precios_Proveedores_Odoo.xlsx` | Precio de proveedor (`product.supplierinfo`) | 60 | `partner_id`, `product_id/default_code`, `min_qty`, `price`, `delay` |
 
 Criterios de adaptación:
 
+- `0_Categorias_Odoo.xlsx` crea las categorías de producto bajo la categoría raíz *All*, y `categ_id` en el archivo de productos usa la ruta completa (por ejemplo `All / Procesador`), de modo que Odoo las encuentre sin tener que crear valores nuevos durante la importación.
+- La columna `id` (ID externo) en productos, clientes y proveedores permite que una reimportación actualice los registros existentes en lugar de duplicarlos.
+- El inventario físico usa como encabezados las etiquetas de la interfaz (*Product/Internal Reference*, *Location*, *Counted Quantity*). Odoo asocia solas *Location* y *Counted Quantity*; la columna del producto debe asociarse a mano a **Product → Internal Reference**.
 - `detailed_type` = `product` para que cada artículo sea **almacenable** y lleve control de existencias.
 - `category_id` guarda el segmento (B2B o B2C) como **etiqueta** del contacto.
 - `supplier_rank` = 1 marca al contacto como proveedor.
 - Las condiciones de pago y los productos que provee cada proveedor se guardan en el campo de notas (`comment`).
 - La columna de imágenes del archivo original no se importa, porque Odoo solo admite imágenes mediante URL o base64.
 
-**Sobre el quinto archivo.** Los cuatro primeros crean los registros, pero ninguno crea las **líneas de precio de proveedor** sobre cada producto (`product.supplierinfo`). Sin esas líneas, el motor de aprovisionamiento no puede generar órdenes de compra y falla con el mensaje *"There is no matching vendor price to generate the purchase order for product [...]"*, y además las RFQ alternativas mostrarían el mismo precio para todos los proveedores. Por esa razón se preparó `5_Precios_Proveedores_Odoo.xlsx` con 60 combinaciones (20 productos × 3 proveedores), donde cada proveedor aplica un recargo distinto según su especialidad para que la comparación de cotizaciones refleje precios reales.
+**Sobre el quinto archivo.** Los archivos anteriores crean los registros, pero ninguno crea las **líneas de precio de proveedor** sobre cada producto (`product.supplierinfo`). Sin esas líneas, el motor de aprovisionamiento no puede generar órdenes de compra y falla con el mensaje *"There is no matching vendor price to generate the purchase order for product [...]"*, y además las RFQ alternativas mostrarían el mismo precio para todos los proveedores. Por esa razón se preparó `5_Precios_Proveedores_Odoo.xlsx` con 60 combinaciones (20 productos × 3 proveedores), donde cada proveedor aplica un recargo distinto según su especialidad para que la comparación de cotizaciones refleje precios reales.
 
-**Orden de importación:** productos, clientes, proveedores, stock inicial (que necesita que los productos ya existan) y, al final, los precios de proveedor (que necesitan tanto los productos como los proveedores).
+**Orden de importación:** categorías, productos, clientes, proveedores, stock inicial (que necesita que los productos ya existan) y, al final, los precios de proveedor (que necesitan tanto los productos como los proveedores).
 
 ---
 
@@ -60,13 +64,21 @@ Desde el menú de aplicaciones se abre **Inventory**. La vista inicial (*Invento
 
 ![Figura 1: Módulo Inventory de Odoo, vista Inventory Overview](capturas/julio_01_inventario_resumen.jpg)
 
-### 3.2 Importación de Productos
+### 3.2 Importación de Categorías y Productos
+
+Primero se crean las categorías:
+
+1. Ir a **Inventory → Configuration → Product Categories**.
+2. ⚙ → **Import records** → **Load File** → `0_Categorias_Odoo.xlsx`. Las columnas `name` y `parent_id` se asocian a *Name* y *Parent Category*.
+3. **Test** e **Import**. Se crean las 7 categorías (Procesador, Memoria RAM, SSD, Switch, Servidor, Tarjeta Madre y Disco Duro) como `All / <categoría>`.
+
+Luego se importan los productos:
 
 1. Ir a **Inventory → Products → Products**.
 2. Pulsar el icono de engranaje (⚙) junto al título y elegir **Import records**.
 3. Pulsar **Load File** y seleccionar `1_Productos_Odoo.xlsx`.
-4. Verificar que cada columna esté asociada al campo correcto: `default_code` a *Internal Reference*, `name` a *Name*, `categ_id` a *Product Category*, `list_price` a *Sales Price*, `standard_price` a *Cost*, `detailed_type` a *Product Type*, `sale_ok` a *Can be Sold* y `purchase_ok` a *Can be Purchased*.
-5. Las categorías (Procesador, Memoria RAM, SSD, Switch, Servidor, Tarjeta Madre y Disco Duro) no existían aún. En el aviso rojo se cambia **When a value cannot be matched** de *Prevent import* a **Create new values**.
+4. Verificar que cada columna esté asociada al campo correcto: `default_code` a *Internal Reference*, `name` a *Name*, `categ_id` a *Product Category* (rutas `All / ...`), `list_price` a *Sales Price*, `standard_price` a *Cost*, `detailed_type` a *Product Type*, `sale_ok` a *Can be Sold* y `purchase_ok` a *Can be Purchased*.
+5. Si Odoo avisa que una categoría no se encuentra, significa que no se importó antes el archivo de categorías. Como alternativa, en el aviso rojo se puede cambiar **When a value cannot be matched** de *Prevent import* a **Create new values**.
 6. Pulsar **Test**. Debe mostrarse el mensaje *Everything seems valid*.
 7. Pulsar **Import**. Se crean los 20 productos.
 
@@ -77,7 +89,7 @@ Desde el menú de aplicaciones se abre **Inventory**. La vista inicial (*Invento
 1. Abrir la aplicación **Contacts** y cambiar a la vista de lista.
 2. ⚙ → **Import records** → **Load File** → `2_Clientes_Odoo.xlsx`.
 3. Verificar el mapeo: `name` a *Name*, `company_type` a *Company Type*, `email` a *Email*, `phone` a *Phone*, `street` a *Street*, `country_id` a *Country* y `category_id` a *Tags* (el segmento B2B o B2C).
-4. **Test** y, si todo es válido, **Import**. Se crean los 5 clientes.
+4. **Test** y, si todo es válido, **Import**. Se crean los 5 clientes. La columna `id` evita duplicados si el archivo se vuelve a importar.
 
 ![Figura 3: Mapeo de columnas del archivo 2_Clientes_Odoo.xlsx](capturas/julio_03_importar_clientes.jpg)
 
@@ -91,11 +103,11 @@ La importación de productos no genera existencias, por lo que el stock inicial 
 
 1. Ir a **Inventory → Operations → Physical Inventory**.
 2. ⚙ → **Import records** → **Load File** → `4_Inventario_Fisico_Odoo.xlsx`.
-3. Asociar manualmente la columna `product_id/default_code` al campo **Product → Internal Reference**. Si no se asocia, Odoo no reconoce el producto y la columna queda sin campo, como se muestra en la figura. La columna `inventory_quantity` se asocia a *Counted Quantity*.
+3. Las columnas `Location` y `Counted Quantity` se asocian automáticamente a *Location* y *Counted Quantity*. La columna `Product/Internal Reference` no se reconoce sola, por lo que se asocia manualmente al campo **Product → Internal Reference** desde el desplegable. Si no se asocia, Odoo no encuentra el producto y devuelve el error de la figura.
 4. **Test** e **Import**. Se crean 20 líneas con la cantidad contada.
 5. Seleccionar todas las líneas y pulsar **Apply All**. Hasta ese momento *On Hand Quantity* sigue en cero.
 
-![Figura 4: Importación del inventario físico con las columnas product_id/default_code e inventory_quantity sin asociar (estado previo al mapeo manual)](capturas/julio_04_importar_inventario_sin_mapear.jpg)
+![Figura 4: Importación del inventario físico con la columna del producto sin asociar (estado previo al mapeo manual)](capturas/julio_04_importar_inventario_sin_mapear.jpg)
 
 ### 3.6 Carga Masiva de Precios de Proveedor
 
@@ -104,7 +116,7 @@ Este archivo es indispensable para que el módulo de Compras pueda generar órde
 1. Ir a **Purchase → Configuration → Vendor Pricelists**.
 2. Pulsar el icono de engranaje (⚙) y elegir **Import records**.
 3. Pulsar **Load File** y seleccionar `5_Precios_Proveedores_Odoo.xlsx`.
-4. Verificar el mapeo: `partner_id` a *Vendor*, `product_id/default_code` a *Product*, `min_qty` a *Quantity*, `price` a *Price* y `delay` a *Lead Time*.
+4. Verificar el mapeo: `partner_id` a *Vendor*, `product_id/default_code` a *Product Template* (Odoo no reconoce esta columna sola; se elige manualmente en el desplegable y busca el producto por su referencia interna), `min_qty` a *Quantity*, `price` a *Price* y `delay` a *Lead Time*.
 5. Pulsar **Test**. Debe mostrarse el mensaje *Everything seems valid*.
 6. Pulsar **Import**. Se crean 60 líneas de precio de proveedor.
 
@@ -222,10 +234,10 @@ La carga de datos maestros en Odoo se validó contra los indicadores definidos e
 
 | Mensaje o síntoma | Causa | Solución |
 |---|---|---|
-| *No matching records found for the following name in field Product Category* | Las categorías del Excel no existen en Odoo | En el aviso rojo, cambiar *When a value cannot be matched* a **Create new values** |
-| *Missing required value for the field 'Product' (product_id)* o *KeyError: 'product_id'* | La columna `product_id/default_code` no se asoció a ningún campo | Asociarla manualmente a **Product → Internal Reference** (Figura 4) |
+| *No matching records found for the following name in field Product Category* | Las categorías del Excel no existen en Odoo | Importar primero `0_Categorias_Odoo.xlsx` (o, en el aviso rojo, cambiar *When a value cannot be matched* a **Create new values**) |
+| *Missing required value for the field 'Product' (product_id)* o *KeyError: 'product_id'* | La columna del producto no se asoció a ningún campo (Odoo no la reconoce sola) | Asociarla manualmente a **Product → Internal Reference** en el desplegable (Figura 4) |
 | El stock sigue en 0 tras importar el inventario físico | Las líneas importadas aún no se aplicaron | Seleccionar todas las líneas y pulsar **Apply All** |
-| Aparecen clientes duplicados tras importar | La base TechCore_DB ya traía contactos con el mismo nombre | Seleccionar los duplicados y usar ⚙ **Actions → Archive** |
+| Aparecen clientes duplicados tras importar | La base TechCore_DB ya traía contactos con el mismo nombre (el `id` externo solo evita duplicados entre importaciones del mismo archivo) | Seleccionar los duplicados y usar ⚙ **Actions → Archive** |
 | Un proveedor creado en Contacts no aparece en Purchase → Vendors | Esa lista filtra los contactos marcados como proveedor | Importarlo con `supplier_rank` = 1 o crearlo desde **Purchase → Orders → Vendors → New** |
 | *There is no matching vendor price to generate the purchase order for product [...] (no vendor defined, minimum quantity not reached, dates not valid, ...)* | El producto no tiene líneas de precio de proveedor (`product.supplierinfo`) | Importar `5_Precios_Proveedores_Odoo.xlsx` desde **Purchase → Configuration → Vendor Pricelists**, o añadir el proveedor en la pestaña *Purchasing* del producto |
 
@@ -233,6 +245,6 @@ La carga de datos maestros en Odoo se validó contra los indicadores definidos e
 
 ## 9. Archivos Entregables de esta Sección
 
-- `1_Productos_Odoo.xlsx`, `2_Clientes_Odoo.xlsx`, `3_Proveedores_Odoo.xlsx`, `4_Inventario_Fisico_Odoo.xlsx` y `5_Precios_Proveedores_Odoo.xlsx`: archivos exactos usados en la carga masiva.
+- `0_Categorias_Odoo.xlsx`, `1_Productos_Odoo.xlsx`, `2_Clientes_Odoo.xlsx`, `3_Proveedores_Odoo.xlsx`, `4_Inventario_Fisico_Odoo.xlsx` y `5_Precios_Proveedores_Odoo.xlsx`: archivos exactos usados en la carga masiva.
 - Capturas de este manual: `Proyecto/Fase2/docu/capturas/julio_*.jpg`.
 - Video demostrativo de la carga de datos y del informe de inventario (enlace en el PDF consolidado).
