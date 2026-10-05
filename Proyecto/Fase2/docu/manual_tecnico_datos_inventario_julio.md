@@ -36,6 +36,7 @@ Se prepararon cuatro archivos `.xlsx` a partir de los datos maestros del grupo (
 | `2_Clientes_Odoo.xlsx` | Contacto (`res.partner`) | 5 | `name`, `company_type`, `email`, `phone`, `street`, `country_id`, `category_id` |
 | `3_Proveedores_Odoo.xlsx` | Contacto (`res.partner`) | 3 | `name`, `company_type`, `email`, `supplier_rank`, `comment` |
 | `4_Inventario_Fisico_Odoo.xlsx` | Ajuste de inventario (`stock.quant`) | 20 | `product_id/default_code`, `location_id`, `inventory_quantity` |
+| `5_Precios_Proveedores_Odoo.xlsx` | Precio de proveedor (`product.supplierinfo`) | 60 | `partner_id`, `product_id/default_code`, `min_qty`, `price`, `delay` |
 
 Criterios de adaptación:
 
@@ -45,7 +46,9 @@ Criterios de adaptación:
 - Las condiciones de pago y los productos que provee cada proveedor se guardan en el campo de notas (`comment`).
 - La columna de imágenes del archivo original no se importa, porque Odoo solo admite imágenes mediante URL o base64.
 
-**Orden de importación:** productos, clientes, proveedores y, al final, el stock inicial (que necesita que los productos ya existan).
+**Sobre el quinto archivo.** Los cuatro primeros crean los registros, pero ninguno crea las **líneas de precio de proveedor** sobre cada producto (`product.supplierinfo`). Sin esas líneas, el motor de aprovisionamiento no puede generar órdenes de compra y falla con el mensaje *"There is no matching vendor price to generate the purchase order for product [...]"*, y además las RFQ alternativas mostrarían el mismo precio para todos los proveedores. Por esa razón se preparó `5_Precios_Proveedores_Odoo.xlsx` con 60 combinaciones (20 productos × 3 proveedores), donde cada proveedor aplica un recargo distinto según su especialidad para que la comparación de cotizaciones refleje precios reales.
+
+**Orden de importación:** productos, clientes, proveedores, stock inicial (que necesita que los productos ya existan) y, al final, los precios de proveedor (que necesitan tanto los productos como los proveedores).
 
 ---
 
@@ -93,6 +96,23 @@ La importación de productos no genera existencias, por lo que el stock inicial 
 5. Seleccionar todas las líneas y pulsar **Apply All**. Hasta ese momento *On Hand Quantity* sigue en cero.
 
 ![Figura 4: Importación del inventario físico con las columnas product_id/default_code e inventory_quantity sin asociar (estado previo al mapeo manual)](capturas/julio_04_importar_inventario_sin_mapear.jpg)
+
+### 3.6 Carga Masiva de Precios de Proveedor
+
+Este archivo es indispensable para que el módulo de Compras pueda generar órdenes de compra. Se importa desde el menú **Purchase → Configuration → Vendor Pricelists**:
+
+1. Ir a **Purchase → Configuration → Vendor Pricelists**.
+2. Pulsar el icono de engranaje (⚙) y elegir **Import records**.
+3. Pulsar **Load File** y seleccionar `5_Precios_Proveedores_Odoo.xlsx`.
+4. Verificar el mapeo: `partner_id` a *Vendor*, `product_id/default_code` a *Product*, `min_qty` a *Quantity*, `price` a *Price* y `delay` a *Lead Time*.
+5. Pulsar **Test**. Debe mostrarse el mensaje *Everything seems valid*.
+6. Pulsar **Import**. Se crean 60 líneas de precio de proveedor.
+
+![Figura 15: Mapeo de columnas del archivo 5_Precios_Proveedores_Odoo.xlsx en el asistente de importación](capturas/julio_15_importar_precios_proveedor.jpg)
+
+Resultado: cada producto queda con **tres proveedores** registrados en su pestaña *Purchasing*. Esto es lo que permite que el motor de aprovisionamiento genere órdenes de compra y que la comparación de cotizaciones multi-proveedor muestre precios diferenciados.
+
+Si este paso se omite, al ejecutar una regla de reposición el sistema devuelve el error *"There is no matching vendor price to generate the purchase order for product [...]"* y la orden de compra no se genera.
 
 ---
 
@@ -177,6 +197,7 @@ Las alertas se basan en las **reglas de reabastecimiento** (*Reordering Rules*) 
 | Productos | 20 | 1 (Logitech MX Keys) | 21 | Figura 8 |
 | Clientes | 5 | 1 (Pedro Gómez) | 6 | Figuras 9 y 12 |
 | Proveedores | 3 | 1 (Distribuidora Tecno S.A.) | 4 | Figuras 13 y 14 |
+| Precios de proveedor | 60 | — | 60 (3 por producto) | Figura 15 |
 | Líneas de inventario físico | 20 | 1 (Update Quantity) | 21 con existencias | Figuras 7 y 8 |
 
 El total de contactos mostrado en la Figura 12 (12) incluye además los registros del sistema (Administrator y My Company) y un usuario del equipo (Gerardo).
@@ -185,13 +206,13 @@ El total de contactos mostrado en la Figura 12 (12) incluye además los registro
 
 ## 7. Medición de Logros y Resultados
 
-La carga de datos maestros en Odoo se validó contra los indicadores definidos en la Fase 1. Para el indicador de **Desempeño del Sistema**, se importaron de forma masiva 20 productos, 5 clientes y 3 proveedores desde archivos Excel y se cargaron las existencias iniciales de los 20 productos mediante Inventario Físico, verificando en Odoo que las cantidades coinciden con las del archivo de origen. Además, se realizó la carga manual de un producto, un cliente y un proveedor para demostrar ambas modalidades. Para el indicador de **Operaciones y Logística**, se generó una orden de compra a un proveedor registrado (P00001), que figura como orden pendiente de recepción en el módulo de Compras, y el informe de inventario permite consultar las existencias actuales, las órdenes pendientes y las alertas de stock bajo mediante reglas de reabastecimiento. Con ello se comprueba que el flujo de carga y consulta de inventario funciona de extremo a extremo y que sirve de base para medir los indicadores de ventas y de satisfacción del cliente en las fases siguientes.
+La carga de datos maestros en Odoo se validó contra los indicadores definidos en la Fase 1. Para el indicador de **Desempeño del Sistema**, se importaron de forma masiva 20 productos, 5 clientes y 3 proveedores desde archivos Excel, se cargaron las existencias iniciales de los 20 productos mediante Inventario Físico y se cargaron 60 líneas de precios de proveedor (20 productos × 3 proveedores), verificando en Odoo que las cantidades y los precios coinciden con los de los archivos de origen. Además, se realizó la carga manual de un producto, un cliente y un proveedor para demostrar ambas modalidades. Para el indicador de **Operaciones y Logística**, se generó una orden de compra a un proveedor registrado (P00001), que figura como orden pendiente de recepción en el módulo de Compras, y el informe de inventario permite consultar las existencias actuales, las órdenes pendientes y las alertas de stock bajo mediante reglas de reabastecimiento. Con ello se comprueba que el flujo de carga y consulta de inventario funciona de extremo a extremo y que sirve de base para medir los indicadores de ventas y de satisfacción del cliente en las fases siguientes.
 
 <!-- REVISAR antes de entregar: la mención a "alertas de stock bajo" solo es válida si las reglas de reabastecimiento ya están configuradas y se ve una alerta (sección 5.3). Si no, quitar esa parte de la frase. -->
 
 | Indicador de la Fase 1 | Qué se validó en la Fase 2 | Evidencia |
 |---|---|---|
-| Desempeño del Sistema 1: registros reflejados en Odoo sin intervención manual | 28 registros maestros importados (20 productos, 5 clientes, 3 proveedores) y 20 líneas de inventario aplicadas | Figuras 2, 3, 4 y 8 |
+| Desempeño del Sistema 1: registros reflejados en Odoo sin intervención manual | 28 registros maestros importados (20 productos, 5 clientes, 3 proveedores), 20 líneas de inventario y 60 precios de proveedor aplicados | Figuras 2, 3, 4, 8 y 15 |
 | Operaciones/Logística 1: alertas de inventario bajo y tiempo de la orden de compra hasta la recepción | Orden de compra P00001 generada y pendiente de recepción; las alertas dependen de las reglas de reabastecimiento | Figura 14, secciones 5.2 y 5.3 |
 | Ventas/Clientes 1 y 2, Satisfacción del Cliente 1 | Base de clientes (B2B y B2C) y catálogo de productos cargados; la medición se realiza con las ventas, cotizaciones y campañas | Secciones 3.2, 3.3 y 4.2 |
 
@@ -206,11 +227,12 @@ La carga de datos maestros en Odoo se validó contra los indicadores definidos e
 | El stock sigue en 0 tras importar el inventario físico | Las líneas importadas aún no se aplicaron | Seleccionar todas las líneas y pulsar **Apply All** |
 | Aparecen clientes duplicados tras importar | La base TechCore_DB ya traía contactos con el mismo nombre | Seleccionar los duplicados y usar ⚙ **Actions → Archive** |
 | Un proveedor creado en Contacts no aparece en Purchase → Vendors | Esa lista filtra los contactos marcados como proveedor | Importarlo con `supplier_rank` = 1 o crearlo desde **Purchase → Orders → Vendors → New** |
+| *There is no matching vendor price to generate the purchase order for product [...] (no vendor defined, minimum quantity not reached, dates not valid, ...)* | El producto no tiene líneas de precio de proveedor (`product.supplierinfo`) | Importar `5_Precios_Proveedores_Odoo.xlsx` desde **Purchase → Configuration → Vendor Pricelists**, o añadir el proveedor en la pestaña *Purchasing* del producto |
 
 ---
 
 ## 9. Archivos Entregables de esta Sección
 
-- `1_Productos_Odoo.xlsx`, `2_Clientes_Odoo.xlsx`, `3_Proveedores_Odoo.xlsx` y `4_Inventario_Fisico_Odoo.xlsx`: archivos exactos usados en la carga masiva.
+- `1_Productos_Odoo.xlsx`, `2_Clientes_Odoo.xlsx`, `3_Proveedores_Odoo.xlsx`, `4_Inventario_Fisico_Odoo.xlsx` y `5_Precios_Proveedores_Odoo.xlsx`: archivos exactos usados en la carga masiva.
 - Capturas de este manual: `Proyecto/Fase2/docu/capturas/julio_*.jpg`.
 - Video demostrativo de la carga de datos y del informe de inventario (enlace en el PDF consolidado).
