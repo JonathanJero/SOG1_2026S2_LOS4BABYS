@@ -63,10 +63,9 @@ Cada integrante del grupo grabó un video demostrativo de su tarea respectiva. L
 | Video | Integrante | Tarea demostrativa | Puntos del enunciado cubiertos | Enlace de Google Drive |
 |---|---|---|---|---|
 | **Video 1** | Julio Alfredo Herrera Orantes | Carga masiva desde Excel, carga manual e informe de inventario | 12.1 y 12.4 | [Ver video](https://drive.google.com/file/d/1c08mAvZATPrDmP6bYA4QsM9ZkjmqphOC/view?usp=sharing) |
-| **Video 2** | Francisco Gerardo Castillo Sagastume | Ciclo completo de compras con comparación multi-proveedor y cotización B2B | 12.2 y 12.3 | *(pendiente)* |
+| **Video 2** | Francisco Gerardo Castillo Sagastume | Ciclo completo de compras con comparación multi-proveedor y cotización B2B | 12.2 y 12.3 | [Ver video](https://drive.google.com/file/d/1xFKy79B_JEP_aFXZFSxv-E1sXugIIysO/view?usp=sharing) |
 | **Video 3** | Jonathan Eliud Jerónimo Salguero | Pipeline CRM, plantillas de correo y envío de campaña segmentada | 13, 14 y 15 | *(pendiente)* |
 
-> **Nota sobre el acceso:** los enlaces deben estar configurados como públicos o sin restricción de acceso para permitir la revisión por parte del jurado evaluador.
 
 ---
 
@@ -673,11 +672,9 @@ Se generó una cotización B2B (TechCorp S.A.) que se convirtió en pedido de ve
 
 **Puntos del enunciado cubiertos:** 12.2 y 12.3
 
-**Enlace de Google Drive:** *(pendiente de registro)*
+**Enlace de Google Drive:** [Ver video drive](https://drive.google.com/file/d/1xFKy79B_JEP_aFXZFSxv-E1sXugIIysO/view?usp=sharing)
 
-**Descripción del contenido del video:**
-
-*(Espacio reservado para describir el contenido del video demostrativo)*
+**Descripción del contenido del video:** El video demuestra el flujo de compras entre B2B y las cotizaciones de clientes.
 
 ---
 
