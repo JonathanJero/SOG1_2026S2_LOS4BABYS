@@ -120,8 +120,6 @@ Este archivo es indispensable para que el módulo de Compras pueda generar órde
 5. Pulsar **Test**. Debe mostrarse el mensaje *Everything seems valid*.
 6. Pulsar **Import**. Se crean 60 líneas de precio de proveedor.
 
-![Figura 15: Mapeo de columnas del archivo 5_Precios_Proveedores_Odoo.xlsx en el asistente de importación](capturas/julio_15_importar_precios_proveedor.jpg)
-
 Resultado: cada producto queda con **tres proveedores** registrados en su pestaña *Purchasing*. Esto es lo que permite que el motor de aprovisionamiento genere órdenes de compra y que la comparación de cotizaciones multi-proveedor muestre precios diferenciados.
 
 Si este paso se omite, al ejecutar una regla de reposición el sistema devuelve el error *"There is no matching vendor price to generate the purchase order for product [...]"* y la orden de compra no se genera.

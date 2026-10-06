@@ -64,7 +64,7 @@ Cada integrante del grupo grabó un video demostrativo de su tarea respectiva. L
 |---|---|---|---|---|
 | **Video 1** | Julio Alfredo Herrera Orantes | Carga masiva desde Excel, carga manual e informe de inventario | 12.1 y 12.4 | [Ver video](https://drive.google.com/file/d/1c08mAvZATPrDmP6bYA4QsM9ZkjmqphOC/view?usp=sharing) |
 | **Video 2** | Francisco Gerardo Castillo Sagastume | Ciclo completo de compras con comparación multi-proveedor y cotización B2B | 12.2 y 12.3 | [Ver video](https://drive.google.com/file/d/1xFKy79B_JEP_aFXZFSxv-E1sXugIIysO/view?usp=sharing) |
-| **Video 3** | Jonathan Eliud Jerónimo Salguero | Pipeline CRM, plantillas de correo y envío de campaña segmentada | 13, 14 y 15 | *(pendiente)* |
+| **Video 3** | Jonathan Eliud Jerónimo Salguero | Pipeline CRM, plantillas de correo y envío de campaña segmentada | 13, 14 y 15 | [Ver video](https://drive.google.com/file/d/1pgQGruBg9p83gksURiXsvYcohlpZTEd8/view?usp=sharing) |
 
 
 ---
@@ -177,8 +177,6 @@ Este archivo es indispensable para que el módulo de Compras pueda generar órde
 4. Verificar el mapeo: `partner_id` a *Vendor*, `product_id/default_code` a *Product Template* (Odoo no reconoce esta columna sola; se elige manualmente en el desplegable y busca el producto por su referencia interna), `min_qty` a *Quantity*, `price` a *Price* y `delay` a *Lead Time*.
 5. Pulsar **Test**. Debe mostrarse el mensaje *Everything seems valid*.
 6. Pulsar **Import**. Se crean 60 líneas de precio de proveedor.
-
-![Figura 15: Mapeo de columnas del archivo 5_Precios_Proveedores_Odoo.xlsx en el asistente de importación](capturas/julio_15_importar_precios_proveedor.jpg)
 
 Resultado: cada producto queda con **tres proveedores** registrados en su pestaña *Purchasing*. Esto es lo que permite que el motor de aprovisionamiento genere órdenes de compra y que la comparación de cotizaciones multi-proveedor muestre precios diferenciados.
 
@@ -806,7 +804,7 @@ Para facilitar la revisión del tribunal evaluador, todos los recursos técnicos
 
 **Puntos del enunciado cubiertos:** 13, 14 y 15
 
-**Enlace de Google Drive:** [Enlace de Google Drive del Video 3]
+**Enlace de Google Drive:** [https://drive.google.com/file/d/1pgQGruBg9p83gksURiXsvYcohlpZTEd8/view?usp=sharing](https://drive.google.com/file/d/1pgQGruBg9p83gksURiXsvYcohlpZTEd8/view?usp=sharing)
 
 **Descripción del contenido del video:**
 

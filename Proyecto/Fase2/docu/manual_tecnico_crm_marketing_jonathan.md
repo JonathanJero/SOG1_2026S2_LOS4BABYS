@@ -126,3 +126,25 @@ Para facilitar la revisión del tribunal evaluador, todos los recursos técnicos
 1. **Trazabilidad y Visibilidad Operativa:** La implementación del pipeline Kanban en Odoo CRM optimiza la supervisión del embudo de ventas de TechCore Solutions, permitiendo identificar de forma inmediata en qué fase se encuentra cada cuenta empresarial y asegurando una transición fluida hacia el cierre de negocios.
 2. **Segmentación y Automatización Eficaz:** El uso combinado de campañas UTM y filtros basados en etiquetas B2B garantiza que las iniciativas de mercadeo alcancen a los tomadores de decisiones indicados, maximizando el retorno de inversión en comunicaciones masivas.
 3. **Calidad de Presentación y Portabilidad:** Al estandarizar las plantillas de correo en código HTML sin emojis informales e incorporar un portal de bienvenida institucional, se proyecta un nivel de madurez y profesionalismo alineado con los estándares de la industria y la rúbrica de evaluación del curso.
+
+---
+
+**Fin del manual técnico.**
+
+# VIDEO 3 — CRM, Email Marketing y Portal
+
+**Integrante:** Jonathan Eliud Jerónimo Salguero
+
+**Tarea demostrativa:** Pipeline de ventas en CRM (Kanban), plantillas corporativas HTML/SVG y envío de campaña publicitaria B2B
+
+**Puntos del enunciado cubiertos:** 13, 14 y 15
+
+**Enlace de Google Drive:** [https://drive.google.com/file/d/1pgQGruBg9p83gksURiXsvYcohlpZTEd8/view?usp=sharing](https://drive.google.com/file/d/1pgQGruBg9p83gksURiXsvYcohlpZTEd8/view?usp=sharing)
+
+**Descripción del contenido del video:**
+
+El video demuestra la operación completa del área comercial y de mercadeo en **Odoo 17.0 Community Edition**:
+1. **Pipeline de Ventas en CRM (Punto 15):** Visualización del tablero Kanban configurado con las 4 etapas comerciales (*Lead*, *Contactado*, *Negociación*, *Cerrado*), la distribución de los 5 prospectos empresariales con la etiqueta `B2B`, el desplazamiento dinámico entre etapas y el cierre exitoso de la oportunidad de *Juan Pérez* marcada con el listón verde de ganada (*Won*, 100% probabilidad).
+2. **Plantillas de Correo Electrónico (Punto 13):** Presentación de las dos plantillas corporativas responsivas diseñadas con estándares profesionales (sin emojis e incorporando iconografía SVG): la de *Promoción Especial B2B* (20% de descuento en almacenamiento y memorias) y la de *Fidelización de Clientes Preferenciales* con llamado a la acción destacado en color verde.
+3. **Campaña Publicitaria y Envío Segmentado (Punto 14):** Demostración de la vinculación de la *Campaña Publicitaria B2B TechCore 2026* bajo el modelo UTM, la segmentación filtrada de contactos hacia clientes con etiqueta `B2B`, el despacho masivo y la consulta de métricas de entrega en el dashboard de Email Marketing.
+
