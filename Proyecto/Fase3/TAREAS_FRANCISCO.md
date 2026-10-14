@@ -59,7 +59,7 @@ Las ventas sembradas por Jonathan son **datos de demostración** y llevan la ref
 2. **Git** y clonar el repositorio:
    ```powershell
    git clone https://github.com/JonathanJero/SOG1_2026S2_LOS4BABYS.git
-   cd SOG1_2026S2_LOS4BABYS\Proyecto\Fase2\techcore-odoo
+   cd SOG1_2026S2_LOS4BABYS\Proyecto\techcore-odoo
    ```
 3. **Power BI Desktop** (Microsoft Store o descarga oficial).
 4. Levantar el proyecto. Usa una de estas dos opciones, la que funcione mejor en tu máquina:
@@ -187,8 +187,8 @@ Subir a Drive con acceso **"Cualquier persona con el enlace puede ver"** y proba
 - Sube solo: `Proyecto/Fase3/bi/Reportes_TechCore.pbix`, `Proyecto/Fase3/docu/manual_bi_francisco.md` y `Proyecto/Fase3/docu/capturas/francisco_f3_*`.
 - **No subas ni modifiques** `dump.sql.gz`, `TechCore_DB_backup.zip` ni `filestore/`. Si al levantar tu entorno Git los marca como modificados, descártalos antes de subir:
   ```powershell
-  git checkout -- Proyecto/Fase2/techcore-odoo/db-init/dump.sql.gz
-  git checkout -- Proyecto/Fase2/techcore-odoo/backup/TechCore_DB_backup.zip
+  git checkout -- Proyecto/techcore-odoo/db-init/dump.sql.gz
+  git checkout -- Proyecto/techcore-odoo/backup/TechCore_DB_backup.zip
   ```
 - Antes de empezar cada sesión: `git pull origin main`.
 - Mensajes de commit descriptivos y sin emojis, por ejemplo: `feat(bi): reportes de inventario y ventas en Power BI`.

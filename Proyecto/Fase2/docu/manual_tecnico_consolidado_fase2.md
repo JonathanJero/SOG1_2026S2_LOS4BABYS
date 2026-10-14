@@ -86,7 +86,7 @@ Acceso al sistema: `http://localhost:8069`, base de datos `TechCore_DB`. La mone
 
 ## 2. Archivos de Importación
 
-Se prepararon seis archivos `.xlsx` a partir de los datos maestros del grupo (`Datos_Maestros_TechCore_Fase2.xlsx`), con los encabezados adaptados a los **campos de Odoo** (nombres técnicos, y en el inventario físico las etiquetas de la interfaz) para que el asistente de importación los reconozca automáticamente. Se encuentran en la carpeta `Proyecto/Fase2/techcore-odoo/`.
+Se prepararon seis archivos `.xlsx` a partir de los datos maestros del grupo (`Datos_Maestros_TechCore_Fase2.xlsx`), con los encabezados adaptados a los **campos de Odoo** (nombres técnicos, y en el inventario físico las etiquetas de la interfaz) para que el asistente de importación los reconozca automáticamente. Se encuentran en la carpeta `Proyecto/techcore-odoo/`.
 
 | Archivo | Modelo de Odoo | Registros | Columnas |
 |---|---|---|---|
@@ -779,9 +779,9 @@ Para facilitar la revisión del tribunal evaluador, todos los recursos técnicos
 | --- | --- | --- |
 | **Plantilla Promoción B2B** | `Proyecto/Fase2/plantillas-correo/plantilla_1_promocion_b2b.html` | Código fuente HTML responsivo con oferta del 20% e iconos SVG. |
 | **Plantilla Fidelización** | `Proyecto/Fase2/plantillas-correo/plantilla_2_fidelizacion.html` | Código fuente HTML con programa VIP y botón de acción verde. |
-| **Script de Despliegue Rápido** | `Proyecto/Fase2/techcore-odoo/start.sh` | Script bash de inicialización automatizada con un solo comando. |
-| **Volcado SQL de Base de Datos** | `Proyecto/Fase2/techcore-odoo/db-init/dump.sql.gz` | Base de datos unificada con CRM, Email Marketing, Portada y Requisición de Compras. |
-| **Respaldo Nativo de Odoo** | `Proyecto/Fase2/techcore-odoo/backup/TechCore_DB_backup.zip` | Archivo zip para restauración mediante el gestor web de base de datos. |
+| **Script de Despliegue Rápido** | `Proyecto/techcore-odoo/start.sh` | Script bash de inicialización automatizada con un solo comando. |
+| **Volcado SQL de Base de Datos** | `Proyecto/techcore-odoo/db-init/dump.sql.gz` | Base de datos unificada con CRM, Email Marketing, Portada y Requisición de Compras. |
+| **Respaldo Nativo de Odoo** | `Proyecto/techcore-odoo/backup/TechCore_DB_backup.zip` | Archivo zip para restauración mediante el gestor web de base de datos. |
 | **Capturas Esenciales** | `Proyecto/Fase2/docu/capturas/` | Directorio con las 5 capturas en alta resolución que ilustran el flujo. |
 
 ---

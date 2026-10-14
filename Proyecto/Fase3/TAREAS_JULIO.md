@@ -29,7 +29,7 @@ Puedes redactar los casos de prueba y el borrador del manual ya. Para **ejecutar
 - Registro de clientes habilitado, pago por transferencia y por Demo, facturación automática y portal en `/my`.
 - Una acción automática que crea una oportunidad en el CRM con la etiqueta `Web B2C` cuando entra una compra desde la web.
 
-Levanta tu entorno con `./start.sh` en `Proyecto/Fase2/techcore-odoo/` y entra a `http://localhost:8069` (usuario `admin@techcore.gt`, contraseña `1234`). Cuando Jonathan cambie la base, haz `git pull` y vuelve a levantar.
+Levanta tu entorno con `./start.sh` (en Linux/Mac) o `.\start.ps1` (en Windows PowerShell) adentro de `Proyecto/techcore-odoo/` y entra a `http://localhost:8069` (usuario `admin@techcore.gt`, contraseña `1234`). Cuando Jonathan cambie la base, haz `git pull` y vuelve a levantar.
 
 ---
 
@@ -169,8 +169,8 @@ Sube a Drive con acceso **"Cualquier persona con el enlace puede ver"** y verif�
 - Sube solo tus archivos: `pruebas_e2e_julio.md`, `manual_usuario_julio.md`, `conclusiones_escalabilidad_julio.md`, la presentación y `capturas/julio_f3_*`.
 - **No subas ni modifiques** `dump.sql.gz`, `TechCore_DB_backup.zip` ni `filestore/`. Si Git los marca como modificados después de probar, descártalos:
   ```bash
-  git checkout -- Proyecto/Fase2/techcore-odoo/db-init/dump.sql.gz
-  git checkout -- Proyecto/Fase2/techcore-odoo/backup/TechCore_DB_backup.zip
+  git checkout -- Proyecto/techcore-odoo/db-init/dump.sql.gz
+  git checkout -- Proyecto/techcore-odoo/backup/TechCore_DB_backup.zip
   ```
 - `git pull origin main` antes de empezar cada sesión.
 - Mensajes de commit descriptivos y sin emojis, por ejemplo: `docs(pruebas): casos E2E y matriz de trazabilidad`.

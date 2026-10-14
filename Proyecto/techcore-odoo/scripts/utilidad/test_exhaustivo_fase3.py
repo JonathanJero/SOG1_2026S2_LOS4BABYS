@@ -10,7 +10,7 @@ Ejecuta una auditoria completa y rigurosa en 6 dimensiones criticas:
 6. Integridad de Documentacion, Enlaces y Reglas de Calidad (cero emojis).
 
 Uso:
-  python3 Proyecto/Fase2/techcore-odoo/scripts/utilidad/test_exhaustivo_fase3.py
+  python3 Proyecto/techcore-odoo/scripts/utilidad/test_exhaustivo_fase3.py
 """
 import os
 import re
@@ -317,9 +317,9 @@ else:
 archivos_calidad = [
     "Proyecto/Fase3/docu/manual_ecommerce_jonathan.md",
     "Proyecto/Fase3/bi/vistas_bi.sql",
-    "Proyecto/Fase2/techcore-odoo/start.sh",
-    "Proyecto/Fase2/techcore-odoo/start.ps1",
-    "Proyecto/Fase2/techcore-odoo/README.md",
+    "Proyecto/techcore-odoo/start.sh",
+    "Proyecto/techcore-odoo/start.ps1",
+    "Proyecto/techcore-odoo/README.md",
 ]
 emojis_totales = 0
 for fpath in archivos_calidad:
@@ -333,9 +333,9 @@ registrar_resultado("Reglas de Proyecto", "Cero emojis en codigo, markdown y scr
 
 # 6.3 Ejecutabilidad de scripts
 scripts_ejecutables = [
-    "Proyecto/Fase2/techcore-odoo/start.sh",
-    "Proyecto/Fase2/techcore-odoo/db-init/01-restore-techcore.sh",
-    "Proyecto/Fase2/techcore-odoo/db-init/02-crear-bi-reader.sh",
+    "Proyecto/techcore-odoo/start.sh",
+    "Proyecto/techcore-odoo/db-init/01-restore-techcore.sh",
+    "Proyecto/techcore-odoo/db-init/02-crear-bi-reader.sh",
 ]
 todos_ejecutables = all(os.access(p, os.X_OK) for p in scripts_ejecutables if os.path.exists(p))
 registrar_resultado("Portabilidad", "Permisos de ejecucion en scripts POSIX", todos_ejecutables, "chmod +x verificado")

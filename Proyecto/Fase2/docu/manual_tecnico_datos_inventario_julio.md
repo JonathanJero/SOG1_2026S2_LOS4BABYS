@@ -28,7 +28,7 @@ Acceso al sistema: `http://localhost:8069`, base de datos `TechCore_DB`. La mone
 
 ## 2. Archivos de Importación
 
-Se prepararon seis archivos `.xlsx` a partir de los datos maestros del grupo (`Datos_Maestros_TechCore_Fase2.xlsx`), con los encabezados adaptados a los **campos de Odoo** (nombres técnicos, y en el inventario físico las etiquetas de la interfaz) para que el asistente de importación los reconozca automáticamente. Se encuentran en la carpeta `Proyecto/Fase2/techcore-odoo/`.
+Se prepararon seis archivos `.xlsx` a partir de los datos maestros del grupo (`Datos_Maestros_TechCore_Fase2.xlsx`), con los encabezados adaptados a los **campos de Odoo** (nombres técnicos, y en el inventario físico las etiquetas de la interfaz) para que el asistente de importación los reconozca automáticamente. Se encuentran en la carpeta `Proyecto/techcore-odoo/`.
 
 | Archivo | Modelo de Odoo | Registros | Columnas |
 |---|---|---|---|

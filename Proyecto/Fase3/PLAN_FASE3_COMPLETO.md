@@ -42,7 +42,7 @@ Está escrito para que una persona o una IA lo ejecute de principio a fin sin co
 | Elemento | Valor |
 |---|---|
 | Repositorio | `https://github.com/JonathanJero/SOG1_2026S2_LOS4BABYS` (rama `main`) |
-| Ruta local de trabajo | `.../SOG1_2026S2_LOS4BABYS/Proyecto/Fase2/techcore-odoo/` (la Fase 3 usa esta misma infraestructura) |
+| Ruta local de trabajo | `.../SOG1_2026S2_LOS4BABYS/Proyecto/techcore-odoo/` (infraestructura central del ERP) |
 | VM | `ssh jona@192.168.64.11` (el acceso por llave o contraseña lo tiene Jonathan) |
 | Carpeta en la VM | `/home/jona/techcore-odoo` (contiene `config/`, `addons/`, `filestore/`, `db-init/`, `docker-compose.yml`) |
 | Contenedores | `techcore_odoo_web` (Odoo 17) y `techcore_postgres_db` (PostgreSQL 15) |
@@ -71,25 +71,25 @@ ssh jona@192.168.64.11 "docker exec techcore_postgres_db psql -U odoo -d TechCor
 
 ```text
 Proyecto/
-├── Fase2/
+├── techcore-odoo/                        (servidor ERP central unificado)
+│   ├── docker-compose.yml, start.sh, start.ps1, README.md
+│   ├── config/odoo.conf, db-init/ (dump.sql.gz, vistas_bi.sql y scripts)
+│   ├── backup/TechCore_DB_backup.zip, filestore/TechCore_DB/
+│   ├── 0_Categorias_Odoo.xlsx ... 5_Precios_Proveedores_Odoo.xlsx
+│   ├── Datos_Maestros_TechCore_Fase2.xlsx
+│   └── scripts/ y scripts/utilidad/   (scripts de carga y auditoría)
+├── Fase2/                                (entregables históricos Fase 2)
 │   ├── enunciado.md                      (enunciado general)
 │   ├── contexto.md                       (bitácora técnica)
 │   ├── instrucciones_fase_2_quetzaldev.md
 │   ├── docu/                             (manuales de la Fase 2 y capturas)
-│   ├── plantillas-correo/                (2 plantillas HTML con SVG)
-│   └── techcore-odoo/
-│       ├── docker-compose.yml, start.sh, README.md
-│       ├── config/odoo.conf, db-init/ (dump.sql.gz y script de restauración)
-│       ├── backup/TechCore_DB_backup.zip, filestore/TechCore_DB/
-│       ├── 0_Categorias_Odoo.xlsx ... 5_Precios_Proveedores_Odoo.xlsx
-│       ├── Datos_Maestros_TechCore_Fase2.xlsx
-│       └── scripts/ y scripts/utilidad/   (scripts de carga y utilidades)
-└── Fase3/                                (esta carpeta)
+│   └── plantillas-correo/                (2 plantillas HTML con SVG)
+└── Fase3/                                (entregables y planeación Fase 3)
     ├── PLAN_FASE3_COMPLETO.md
     ├── TAREAS_JULIO.md
     ├── TAREAS_FRANCISCO.md
-    ├── docu/capturas/                    (se crea en la Fase 3)
-    └── bi/                               (se crea: .pbix y vistas SQL)
+    ├── docu/                             (manual técnico eCommerce y 9 capturas)
+    └── bi/                               (vistas analíticas y .pbix)
 ```
 
 ---

@@ -43,7 +43,7 @@ python3 scripts/utilidad/generar_excel_precios_proveedor.py
 Todos se ejecutan con el contenedor de Odoo:
 
 ```bash
-cd Proyecto/Fase2/techcore-odoo
+cd Proyecto/techcore-odoo
 
 # Reconstruir datos maestros
 docker compose run --rm -T web odoo shell \
