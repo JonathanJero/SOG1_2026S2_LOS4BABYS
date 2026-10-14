@@ -1,135 +1,96 @@
-# TechCore Solutions Guatemala - Entorno Odoo 17 ERP/CRM (Fase 2)
+# TechCore Solutions Guatemala - Entorno Odoo 17 ERP/CRM/BI (Fase 3)
 
-Este directorio contiene todo el entorno de trabajo de **Odoo 17.0** y **PostgreSQL 15** empaquetado y listo para levantarse con un solo comando.
+Este directorio contiene todo el entorno de trabajo integrado de **Odoo 17.0 Community**, **PostgreSQL 15** y **Vistas Analíticas para Power BI**, empaquetado y listo para levantarse con un solo comando tanto en **macOS/Linux** como en **Windows**.
 
-### Estado de la base de datos `TechCore_DB`
+---
 
-La base se entrega en **estado limpio de datos maestros**, con la configuración completa y lista para la demostración de la Fase 2:
+## 1. Requisitos Previos
 
-**Configurado (listo para demostrar):**
+- **Docker** y **Docker Compose** (Docker Desktop en Windows y Mac, o Docker Engine en Linux).
+- Mínimo **6 GB de memoria RAM libre** recomendados para Docker.
+- Puertos libres en el equipo anfitrión:
+  - `8069`: Interfaz web de Odoo 17 y portal de clientes.
+  - `5432`: Conexión de base de datos PostgreSQL para Microsoft Power BI Desktop.
 
-| Módulo | Detalle |
-|---|---|
-| Inventario | Almacén `WH/Stock` operativo, con rutas de aprovisionamiento |
-| Compras | Ciclo completo RFQ → Alternatives → OC → Recepción |
-| Requisiciones | `purchase_requisition_stock` instalado (Blanket Orders) |
-| Ventas | Cotizaciones y pedidos con condiciones de crédito |
-| CRM | Pipeline Kanban de 4 etapas + 5 oportunidades |
-| Email Marketing | 2 plantillas propias + 3 campañas segmentadas |
-| Sitio Web | Portal de cliente e integración con el ERP |
+---
 
-**Vacío a propósito (se carga en la demostración):**
+## 2. Puesta en Marcha (1 Solo Comando)
 
-| Dato | Estado | Por qué |
+### En macOS y Linux:
+Abre una terminal en esta carpeta y ejecuta:
+```bash
+./start.sh
+```
+
+### En Windows (PowerShell):
+Abre PowerShell en esta carpeta y ejecuta:
+```powershell
+.\start.ps1
+```
+*(Alternativamente en Windows: ejecutar `./start.sh` desde Git Bash o Ubuntu sobre WSL2).*
+
+Ambos scripts levantan los contenedores, auto-restauran la base `TechCore_DB` si es el primer arranque, aplican las vistas analíticas de Business Intelligence y verifican la disponibilidad de la aplicación de Ventas.
+
+---
+
+## 3. Credenciales y Enlaces de Acceso
+
+| Servicio | Parámetro | Valor |
 |---|---|---|
-| Productos | 0 activos | El punto 2.1 de la rúbrica exige demostrar la carga masiva y manual **en vivo**. Con 30 puntos en juego, no puede entregarse precargada. |
-| Clientes | 0 | Ídem |
-| Proveedores | 0 | Ídem |
-| Precios de proveedor | 0 | Se importan después de que existan productos y proveedores |
-| Inventario físico | 0 | Se carga después de que existan los productos |
-| Órdenes de compra | 0 | Se demuestran en vivo |
-| Pedidos de venta | 0 | Se demuestran en vivo |
+| **Odoo Web / E-Commerce** | URL Principal | [http://localhost:8069](http://localhost:8069) |
+| **Tienda en Línea** | Catálogo E-Commerce | [http://localhost:8069/shop](http://localhost:8069/shop) |
+| **Portal de Cliente** | Mis Pedidos / Facturas | [http://localhost:8069/my](http://localhost:8069/my) |
+| **Base de Datos ERP** | Nombre de Base de Datos | `TechCore_DB` |
+| **Usuario Administrador** | Correo / Login | `admin@techcore.gt` |
+| **Contraseña Administrador** | Contraseña | `1234` |
+| **Database Manager** | Master Password | `techcore_master_pwd` |
 
-### Archivos de carga masiva
+---
 
-Los archivos `.xlsx` están en esta carpeta y son los que Julio carga durante la demostración:
+## 4. Conexión de Microsoft Power BI Desktop (Business Intelligence)
 
-| Archivo | Contenido | Registros |
+Para conectar Power BI Desktop al entorno analítico local:
+
+1. Abrir **Power BI Desktop**.
+2. Seleccionar **Obtener datos (Get Data) → Base de datos PostgreSQL**.
+3. Completar los parámetros de conexión:
+   - **Servidor:** `localhost:5432`
+   - **Base de datos:** `TechCore_DB`
+   - **Modo de conectividad:** `Importar` (o `DirectQuery` según necesidad)
+4. En la pantalla de autenticación de base de datos:
+   - **Tipo de autenticación:** `Base de datos` (Database)
+   - **Nombre de usuario:** `bi_reader`
+   - **Contraseña:** `bi_reader_techcore`
+5. En el navegador de tablas, seleccionar las **4 vistas analíticas**:
+   - `v_bi_ventas_detalle`: Detalle de transacciones históricas con segmentación B2B/B2C, temporalidad y canales.
+   - `v_bi_inventario`: Existencias en almacén, umbrales de reorden, valoración monetaria y alertas de stock bajo.
+   - `v_bi_top_productos`: Ranking de productos más vendidos ordenados por ingresos y unidades.
+   - `v_bi_compras`: Registro de compras a proveedores y recepciones de mercancía.
+
+---
+
+## 5. Módulos y Flujos Operativos Implementados (Fase 3)
+
+| Componente | Estado | Detalle |
 |---|---|---|
-| `1_Productos_Odoo.xlsx` | Productos de hardware | 20 |
-| `2_Clientes_Odoo.xlsx` | Clientes B2B y B2C | 5 |
-| `3_Proveedores_Odoo.xlsx` | Proveedores | 3 |
-| `4_Inventario_Fisico_Odoo.xlsx` | Existencias iniciales | 20 |
-| `5_Precios_Proveedores_Odoo.xlsx` | Precios de proveedor por producto | 60 |
-
-> **`5_Precios_Proveedores_Odoo.xlsx` es obligatorio.** Los cuatro primeros archivos crean los registros, pero ninguno crea las líneas de precio de proveedor (`product.supplierinfo`). Sin ese quinto archivo, las reglas de reposición fallan con *"There is no matching vendor price to generate the purchase order for product [...]"* y las RFQ alternativas muestran el mismo precio para todos los proveedores.
-
-**Orden de importación:** productos → clientes → proveedores → inventario físico → precios de proveedor. Los precios van al final porque necesitan que ya existan los productos (columna `product_id/default_code`) y los proveedores (columna `partner_id`).
-
-> **Orden de la demostración en la evaluación:**
-> 1. Julio importa los cinco archivos y crea un registro manual de producto, cliente y proveedor desde la interfaz.
-> 2. Francisco configura puntos de reorden, ejecuta el ciclo de compras con comparación multi-proveedor y genera la cotización B2B.
-> 3. Jonathan muestra el pipeline CRM y el envío de la campaña segmentada.
-
-Los datos de esta demostración quedaron documentados con evidencia gráfica en los manuales técnicos de `Proyecto/Fase2/docu/` y en el video demostrativo.
+| **E-Commerce Catálogo** | 21 Productos Publicados | Procesadores, RAM, SSD, Discos, Switches, Servidores, Tarjetas Madre y Periféricos con imágenes y fichas técnicas. |
+| **Disponibilidad Web** | Control de Stock Activo | `website_sale_stock` configurado para impedir compras sin inventario y alertar umbrales mínimos. |
+| **Registro de Clientes** | Libre (/web/signup) | Registro B2C directo con acceso a portal. |
+| **Métodos de Pago** | Demo y Transferencia | Proveedor Demo (simulación) y Transferencia Bancaria configurados en GTQ. |
+| **Facturación Automática** | GTQ con 12% IVA | Factura generada y emitida automáticamente al confirmar la venta. |
+| **Integración CRM** | Automatizada | Al crearse un pedido web, se genera automáticamente una oportunidad en CRM con etiqueta `Web B2C` en etapa `Lead`. |
+| **Ventas Históricas** | 75 Órdenes Sembradas | Distribuidas en 13 semanas para permitir análisis temporal en Power BI. |
+| **Compras Históricas** | 16 Órdenes Recibidas | Proveedores Ingram Micro, Intcomex, PC Mayorista y Distribuidora Tecno. |
 
 ---
 
-## Requisitos Previos
-
-- Tener instalado **Docker** y **Docker Compose** (Docker Desktop en Windows/Mac o docker-ce en Linux).
-- Tener libre el puerto `8069`.
-
----
-
-## Método 1: Despliegue Automático (Recomendado - 1 Solo Comando)
-
-Este método levanta los contenedores, restaura la base de datos `TechCore_DB` y monta el filestore de forma automática.
-
-1. Abre tu terminal en esta carpeta:
-   ```bash
-   cd Proyecto/Fase2/techcore-odoo
-   ```
-
-2. Ejecuta el script de inicio:
-   ```bash
-   ./start.sh
-   ```
-   *(O si prefieres usar Docker Compose directamente: `docker compose up -d`)*
-
-3. Espera unos segundos a que la base de datos se inicialice. Cuando termine, abre tu navegador web:
-   **URL:** [http://localhost:8069](http://localhost:8069)
-
----
-
-## Credenciales de Acceso
-
-| Parámetro | Valor |
-| --- | --- |
-| **URL del Sistema** | `http://localhost:8069` |
-| **Base de Datos** | `TechCore_DB` |
-| **Usuario Administrador** | `admin@techcore.gt` |
-| **Contraseña Administrador** | `1234` |
-| **Master Password (Database Manager)** | `techcore_master_pwd` |
-
----
-
-## Contenido del Entorno
-
-- **`docker-compose.yml`**: Orquestación de servicios `web` (Odoo 17.0) y `db` (Postgres 15) con comprobación de salud (*healthcheck*).
-- **`config/odoo.conf`**: Configuración de Odoo preconfigurada para conectar automáticamente a `TechCore_DB`.
-- **`db-init/`**:
-  - `01-restore-techcore.sh`: Script que crea la base de datos y restaura el dump automáticamente en el primer arranque.
-  - `dump.sql.gz`: Volcado binario comprimido de la base de datos `TechCore_DB`.
-- **`filestore/TechCore_DB/`**: Almacén de archivos multimedia, logos corporativos, banners de correo y adjuntos.
-- **`backup/TechCore_DB_backup.zip`**: Respaldo nativo de Odoo (ZIP) generado desde el administrador de base de datos oficial.
-- **`addons/`**: Directorio para módulos adicionales si se requieren en fases posteriores.
-
----
-
-## Método 2: Restauración Manual por Interfaz Web (Alternativa)
-
-Si por alguna razón deseas restaurar la base de datos de manera manual a través de la interfaz web de Odoo:
-
-1. Levanta los contenedores sin la restauración automática (o déjalos corriendo con `docker compose up -d`).
-2. Ingresa en tu navegador a:
-   [http://localhost:8069/web/database/manager](http://localhost:8069/web/database/manager)
-3. Haz clic en el botón **Restore Database** (Restaurar Base de Datos).
-4. Completa los campos:
-   - **Master Password:** `techcore_master_pwd`
-   - **File (Archivo):** Selecciona el archivo `backup/TechCore_DB_backup.zip`.
-   - **Database Name:** `TechCore_DB`
-5. Haz clic en **Continue** y espera a que finalice la carga.
-
----
-
-## Comandos de Mantenimiento
+## 6. Comandos Útiles
 
 - **Ver logs en tiempo real:**
   ```bash
   docker compose logs -f
   ```
-- **Detener el entorno (manteniendo los datos):**
+- **Detener el entorno:**
   ```bash
   docker compose down
   ```
@@ -137,8 +98,9 @@ Si por alguna razón deseas restaurar la base de datos de manera manual a travé
   ```bash
   docker compose restart
   ```
-- **Reiniciar desde cero (borrar datos y volver a auto-restaurar):**
+- **Reinicio limpio (borra volúmenes y re-restaura desde cero):**
   ```bash
   docker compose down -v
   ./start.sh
   ```
+  *(En Windows: `docker compose down -v` y luego `.\start.ps1`)*

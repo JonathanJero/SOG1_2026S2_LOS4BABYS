@@ -11,7 +11,7 @@ echo "=========================================================="
 # 1. Asegurar permisos en filestore y db-init
 echo "[INFO] Configurando permisos locales..."
 chmod -R a+rwX filestore db-init scripts 2>/dev/null || true
-chmod +x db-init/01-restore-techcore.sh 2>/dev/null || true
+chmod +x db-init/01-restore-techcore.sh db-init/02-crear-bi-reader.sh 2>/dev/null || true
 
 # 2. Levantar contenedores
 echo "[INFO] Levantando servicios con Docker Compose..."
@@ -60,18 +60,34 @@ if [ -z "$SKIP_MENU_FIX" ]; then
     fi
 fi
 
+# 5. Asegurar rol y vistas de Business Intelligence
+if [ -z "$SKIP_MENU_FIX" ]; then
+    echo ""
+    echo "[INFO] Verificando vistas analiticas y usuario bi_reader..."
+    docker compose exec -T db psql -U odoo -d TechCore_DB -f /docker-entrypoint-initdb.d/vistas_bi.sql >/dev/null 2>&1 || true
+    echo "[OK] Vistas de Business Intelligence verificadas."
+fi
+
 echo ""
 echo "=========================================================="
 echo " [OK] ENTORNO LISTO Y OPERATIVO"
 echo "=========================================================="
-echo " Acceso Web:     http://localhost:8069"
-echo " Base de Datos:  TechCore_DB"
-echo " Usuario Admin:  admin@techcore.gt"
-echo " Contrasena:     1234"
-echo " Master Pwd:     techcore_master_pwd"
+echo " Acceso Web Odoo: http://localhost:8069"
+echo " Base de Datos:   TechCore_DB"
+echo " Usuario Admin:   admin@techcore.gt"
+echo " Contrasena:      1234"
+echo " Master Pwd:      techcore_master_pwd"
+echo "----------------------------------------------------------"
+echo " Conexion Power BI Desktop / BI Analytics:"
+echo " Servidor / Host: localhost:5432"
+echo " Base de Datos:   TechCore_DB"
+echo " Usuario BI:      bi_reader"
+echo " Contrasena BI:   bi_reader_techcore"
+echo " Vistas:          v_bi_ventas_detalle, v_bi_inventario,"
+echo "                  v_bi_top_productos, v_bi_compras"
 echo "=========================================================="
 echo " Comandos utiles:"
-echo "   - Ver logs:   docker compose logs -f"
-echo "   - Detener:    docker compose down"
-echo "   - Reiniciar:  docker compose restart"
+echo "   - Ver logs:    docker compose logs -f"
+echo "   - Detener:     docker compose down"
+echo "   - Reiniciar:   docker compose restart"
 echo "=========================================================="
