@@ -32,7 +32,10 @@ services:
       - odoo-db-data:/var/lib/postgresql/data/pgdata
       - ./db-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U odoo -d TechCore_DB"]
+      # -h 127.0.0.1 obliga a usar TCP: durante la restauracion inicial el
+      # servidor temporal solo escucha en el socket unix, por lo que un
+      # pg_isready por socket daba "healthy" antes de terminar el restore.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U odoo -d TechCore_DB"]
       interval: 5s
       timeout: 5s
       retries: 30

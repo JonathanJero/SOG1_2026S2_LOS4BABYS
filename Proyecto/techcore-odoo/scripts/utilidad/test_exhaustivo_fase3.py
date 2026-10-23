@@ -265,8 +265,8 @@ print("\n--- 5. PRUEBA DE ARRANQUE LIMPIO Y RESTAURACION DESDE DUMP.SQL.GZ ---")
 cmd_clean_test = """
 docker exec techcore_postgres_db dropdb -U odoo --if-exists TechCore_DB_TestClean && \
 docker exec techcore_postgres_db createdb -U odoo -O odoo TechCore_DB_TestClean && \
-docker exec techcore_postgres_db bash -c "gunzip -c /docker-entrypoint-initdb.d/dump.sql.gz | psql -U odoo -d TechCore_DB_TestClean --quiet" && \
-docker exec techcore_postgres_db psql -U odoo -d TechCore_DB_TestClean -f /docker-entrypoint-initdb.d/vistas_bi.sql && \
+docker exec techcore_postgres_db bash -c "gunzip -c /docker-entrypoint-initdb.d/sql/dump.sql.gz | psql -U odoo -d TechCore_DB_TestClean --quiet" && \
+docker exec techcore_postgres_db psql -U odoo -d TechCore_DB_TestClean -f /docker-entrypoint-initdb.d/sql/vistas_bi.sql && \
 docker exec techcore_postgres_db psql -U odoo -d TechCore_DB_TestClean -t -A -c "
 SELECT 
   (SELECT count(*) FROM product_template WHERE default_code LIKE 'PROD-%') || '|' ||

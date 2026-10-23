@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
 echo "=================================================="
 echo " [TechCore] Iniciando aprovisionamiento automático"
@@ -13,16 +13,37 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     GRANT ALL PRIVILEGES ON DATABASE "TechCore_DB" TO "$POSTGRES_USER";
 EOSQL
 
-# 2. Restaurar la información desde el dump comprimido o sql
-echo "2. Restaurando esquema y datos para TechCore_DB..."
-if [ -f /docker-entrypoint-initdb.d/dump.sql.gz ]; then
-    echo "Restaurando desde dump.sql.gz..."
-    gunzip -c /docker-entrypoint-initdb.d/dump.sql.gz | psql --username "$POSTGRES_USER" --dbname "TechCore_DB" --quiet
-elif [ -f /docker-entrypoint-initdb.d/dump.sql ]; then
-    echo "Restaurando desde dump.sql..."
-    psql --username "$POSTGRES_USER" --dbname "TechCore_DB" --quiet < /docker-entrypoint-initdb.d/dump.sql
+# 2. Crear el rol bi_reader ANTES de restaurar.
+# El dump incluye las sentencias GRANT ... TO bi_reader (ACL del esquema public
+# y de las vistas BI). Si el rol no existe todavía, la restauración falla con
+# "role bi_reader does not exist", el entrypoint de PostgreSQL aborta y el
+# contenedor se reinicia dejando la base a medio configurar.
+echo "2. Asegurando rol de Business Intelligence bi_reader..."
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    DO \$\$
+    BEGIN
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'bi_reader') THEN
+            CREATE ROLE bi_reader WITH LOGIN PASSWORD 'bi_reader_techcore';
+        END IF;
+    END
+    \$\$;
+EOSQL
+
+# 3. Restaurar la información desde el dump comprimido o sql.
+# El dump vive en db-init/sql/ para que el entrypoint oficial de PostgreSQL no
+# lo ejecute por su cuenta (solo procesa los archivos del primer nivel). Si
+# estuviera en db-init/, se restauraría una segunda vez sobre la base "postgres".
+DUMP_DIR="/docker-entrypoint-initdb.d/sql"
+echo "3. Restaurando esquema y datos para TechCore_DB..."
+if [ -f "$DUMP_DIR/dump.sql.gz" ]; then
+    echo "Restaurando desde $DUMP_DIR/dump.sql.gz..."
+    gunzip -c "$DUMP_DIR/dump.sql.gz" | psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "TechCore_DB" --quiet
+elif [ -f "$DUMP_DIR/dump.sql" ]; then
+    echo "Restaurando desde $DUMP_DIR/dump.sql..."
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "TechCore_DB" --quiet < "$DUMP_DIR/dump.sql"
 else
-    echo "ADVERTENCIA: No se encontró dump en /docker-entrypoint-initdb.d/"
+    echo "ERROR: No se encontró dump en $DUMP_DIR/" >&2
+    exit 1
 fi
 
 echo "=================================================="
