@@ -231,3 +231,15 @@ Se ejecutó un caso de prueba integral para verificar la consistencia del sistem
 1. **Integración Total sin Silos de Información:** Se eliminó la separación entre el canal digital y la administración central. Una venta realizada por un cliente en el navegador afecta de manera simultánea el inventario en almacén, emite la factura contable, registra el asiento de pago y alerta al equipo comercial en el CRM.
 2. **Desacoplamiento Efectivo para Business Intelligence:** La creación de las vistas SQL y el rol de solo lectura `bi_reader` garantiza que la máquina Windows de Francisco pueda conectarse con Power BI sin sobrecargar el servidor web de Odoo ni requerir permisos administrativos en el motor de bases de datos.
 3. **Portabilidad y Despliegue en Un Solo Paso:** Gracias a los scripts `start.sh` (POSIX) y `start.ps1` (PowerShell), el entorno completo con base de datos, filestore, configuraciones de eCommerce y vistas de BI puede levantarse de forma reproducible en cualquier máquina del equipo de trabajo.
+
+---
+
+## 10. Video Demostrativo
+
+# [VIDEO 1 - Despliegue de E-Commerce, Portal Web y Trazabilidad ERP/CRM](https://drive.google.com/file/d/1Aic7k_oGkkwmFqVYoWFF8siOEHab441A/view?usp=sharing)
+
+- **Responsable:** Jonathan Eliud Jerónimo Salguero
+- **Carnet:** 202300353
+- **Plataforma:** Google Drive (acceso público para visualización)
+- **Enlace directo:** https://drive.google.com/file/d/1Aic7k_oGkkwmFqVYoWFF8siOEHab441A/view?usp=sharing
+- **Descripción del contenido:** Recorrido guiado de la tienda virtual en `/shop`, navegación por categorías, ficha técnica de producto con precios en GTQ e IVA del 12%, flujo de compra y checkout con pasarela Demo, acceso al portal de cliente `/my` con consulta y descarga de factura en PDF, y comprobación de la trazabilidad desatendida en el backend de Odoo (generación automática de oportunidad con etiqueta `Web B2C` en el CRM y descuento de inventario en almacén).
