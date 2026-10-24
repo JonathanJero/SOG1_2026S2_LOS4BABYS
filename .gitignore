@@ -1,3 +1,4 @@
 .DS_Store
 *.pbix.tmp
 mssql_data/
+Proyecto/Fase3/docu/*.html

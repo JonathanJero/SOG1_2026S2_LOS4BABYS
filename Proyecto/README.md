@@ -67,4 +67,6 @@ Para levantar el sistema Odoo y la base de datos analitica:
 ## Documento Principal de Entrega de Fase 3
 
 El documento maestro integral que unifica todo el trabajo de los tres integrantes se encuentra en:
-- **[Manual Tecnico Consolidado de Fase 3](file:///Users/jona/Desktop/USAC/4to_Anio/8vo%20Semestre/GERENCIALES/LAB/Practicas/P1/SOG1_2026S2_LOS4BABYS/Proyecto/Fase3/docu/manual_tecnico_consolidado_fase3.md)** (`Proyecto/Fase3/docu/manual_tecnico_consolidado_fase3.md`)
+- **[Manual Tecnico Consolidado de Fase 3 (Markdown)](file:///Users/jona/Desktop/USAC/4to_Anio/8vo%20Semestre/GERENCIALES/LAB/Practicas/P1/SOG1_2026S2_LOS4BABYS/Proyecto/Fase3/docu/manual_tecnico_consolidado_fase3.md)** (`Proyecto/Fase3/docu/manual_tecnico_consolidado_fase3.md`)
+- **[Manual Tecnico Consolidado de Fase 3 (PDF Academico)](file:///Users/jona/Desktop/USAC/4to_Anio/8vo%20Semestre/GERENCIALES/LAB/Practicas/P1/SOG1_2026S2_LOS4BABYS/Proyecto/Fase3/docu/manual_tecnico_consolidado_fase3.pdf)** (`Proyecto/Fase3/docu/manual_tecnico_consolidado_fase3.pdf`)
+

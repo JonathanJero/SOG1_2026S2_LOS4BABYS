@@ -28,6 +28,7 @@ Para iniciar el entorno:
 | Archivo / Directorio | Descripcion | Responsable |
 |---|---|---|
 | `docu/manual_tecnico_consolidado_fase3.md` | **Manual Tecnico Consolidado Integral de Fase 3** (Documento maestro unificado con E-Commerce, BI, Pruebas E2E, Manual de Usuario y Conclusiones). | Equipo |
+| `docu/manual_tecnico_consolidado_fase3.pdf` | **Version PDF Academica Oficial** (Formato en blanco y negro, Times New Roman, interlineado 1.5, portada formal y 27 evidencias). | Equipo |
 | `docu/manual_ecommerce_jonathan.md` | Manual tecnico especializado de E-Commerce, pasarelas de pago, portal web y vistas SQL. | Jonathan Jeronimo |
 | `docu/manual_bi_francisco.md` | Manual tecnico especializado de Business Intelligence, modelo en estrella y medidas DAX. | Francisco Castillo |
 | `docu/pruebas_e2e_julio.md` | Protocolo de pruebas End-to-End (CP-01 a CP-09) y matriz de trazabilidad al 100%. | Julio Herrera |
